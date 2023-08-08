@@ -1,23 +1,56 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import "./App.css";
+import { marked } from "marked";
 
 function App() {
+  const [text, setText] = useState(`
+  # H1 
+  ## H2
+  [title](https://www.example.com)
+  \`code\`
+  \`\`\`
+  {
+  "firstName": "John",
+  "lastName": "Smith",
+  "age": 25
+  }
+  \`\`\` 
+  - First item
+  - Second item
+  - Third item
+
+  > blockquote
+
+  ![alt text](image.jpg)
+
+  **bold text**
+  `);
+
+  marked.setOptions({
+    breaks: true,
+  });
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <div className="editor">
+        <h3>Editor</h3>
+        <textarea
+          id="editor"
+          onChange={(event) => {
+            setText(event.target.value);
+          }}
+          value={text}
+        ></textarea>
+      </div>
+      <div className="preview">
+        <h3>Previewer</h3>
+        <div
+          id="preview"
+          dangerouslySetInnerHTML={{
+            __html: marked(text),
+          }}
+        ></div>
+      </div>
     </div>
   );
 }
